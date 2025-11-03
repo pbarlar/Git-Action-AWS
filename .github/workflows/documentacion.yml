@@ -19,7 +19,5 @@ jobs:
       - name: 3.Generar documentacion
         run: |
           echo "Generando documentación con JSDoc..."
-          # Crea la carpeta de destino
-          mkdir -p docs 
-          # Comando directo de JSDoc para generar la documentación
+          mkdir -p docs
           jsdoc -d docs .

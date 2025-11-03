@@ -8,23 +8,25 @@ function sumar(a, b) {
   return n1 + n2;
 }
 
-// Interacción con el DOM
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("sumButton");
-  const result = document.getElementById("result");
+// Solo ejecuta la parte del DOM si existe "document"
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("sumButton");
+    const result = document.getElementById("result");
 
-  btn.addEventListener("click", () => {
-    const num1 = document.getElementById("num1").value;
-    const num2 = document.getElementById("num2").value;
+    btn.addEventListener("click", () => {
+      const num1 = document.getElementById("num1").value;
+      const num2 = document.getElementById("num2").value;
 
-    try {
-      const suma = sumar(num1, num2);
-      result.textContent = `Resultado: ${suma}`;
-    } catch (error) {
-      result.textContent = `Error: ${error.message}`;
-    }
+      try {
+        const suma = sumar(num1, num2);
+        result.textContent = `Resultado: ${suma}`;
+      } catch (error) {
+        result.textContent = `Error: ${error.message}`;
+      }
+    });
   });
-});
+}
 
 // Exportar para Jest
 if (typeof module !== "undefined") {

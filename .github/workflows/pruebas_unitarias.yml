@@ -2,7 +2,12 @@ name: Comprobación pruebas unitarias
 
 on:
   workflow_dispatch: #Ejecución cuando se le de al boton
-
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
 jobs:
   comprobar_pruebas_unitarias:
     runs-on: ubuntu-latest

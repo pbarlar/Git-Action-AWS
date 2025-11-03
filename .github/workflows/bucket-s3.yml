@@ -1,12 +1,10 @@
 name: Subir Proyecto Bucket S3
-
 on:
   workflow_dispatch:
 
 jobs:
   despliegue-bucket:
     runs-on: ubuntu-latest
-
     steps:
       - name: 1.Checkout del código
         uses: actions/checkout@v4
@@ -16,11 +14,9 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 3.Instalar dependencias y generar build
+      - name: 3.Instalar dependencias
         run: |
           npm ci
-          npm run build
-        
 
       - name: 4.Configurar credenciales de AWS
         uses: aws-actions/configure-aws-credentials@v2
@@ -32,5 +28,5 @@ jobs:
       - name: 5.Subir al bucket
         run: |
           echo "Subiendo archivos a S3..."
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET }}/ --delete --acl public-read
+          aws s3 sync ./ s3://${{ secrets.S3_BUCKET }}/ --delete --acl public-read
      

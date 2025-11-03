@@ -20,4 +20,4 @@ jobs:
         run: |
           echo "Generando documentación con JSDoc..."
           mkdir -p docs
-          jsdoc -d docs .
+          npx jsdoc -d docs .

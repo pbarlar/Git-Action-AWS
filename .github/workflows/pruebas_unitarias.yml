@@ -8,11 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps: 
-      - name: 1.Checkout del codigo
-        uses: actions/checkout@v5.0.0
+      - name: 1. Checkout del código
+        uses: actions/checkout@v5
 
-      - name: 2.Comprobar pruebas unitarias
-        run: |
-          npm install
-          npm test
+      - name: 2. Instalar dependencias
+        run: npm install
+
+      - name: 3. Arreglar permisos del binario Jest
+        run: chmod +x ./node_modules/.bin/jest
+
+      - name: 4. Ejecutar pruebas unitarias
+        run: npm test
     

@@ -1,6 +1,13 @@
 name: Subir Proyecto Bucket S3
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  
 
 jobs:
   despliegue-bucket:

@@ -13,7 +13,6 @@ jobs:
 
       - name: 2.Comprobar pruebas unitarias
         run: |
-          npm init -y
-          npm --save-dev jest
+          npm install
           npm test
     

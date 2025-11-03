@@ -1,0 +1,19 @@
+name: Comprobación pruebas unitarias
+
+on:
+  workflow_dispatch: #Ejecución cuando se le de al boton
+
+jobs:
+  comprobar_pruebas_unitarias:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: 1.Checkout del codigo
+        uses: actions/checkout@v5.0.0
+
+      - name: 2.Comprobar pruebas unitarias
+        run: |
+          npm init -y
+          npm --save-dev jest
+          npm test
+    

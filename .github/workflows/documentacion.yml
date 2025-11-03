@@ -1,0 +1,25 @@
+name: Documentacion automatica JSDOC
+
+on:
+  workflow_dispatch:
+
+jobs:
+  documentacion_automatica:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1.Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: 2.Instalar dependencias
+        run: |
+          npm install
+          npm install jsdoc
+
+      - name: 3.Generar documentacion
+        run: |
+          echo "Generando documentación con JSDoc..."
+          # Crea la carpeta de destino
+          mkdir -p docs 
+          # Comando directo de JSDoc para generar la documentación
+          jsdoc -d docs .

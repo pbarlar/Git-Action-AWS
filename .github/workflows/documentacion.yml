@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: 1.Checkout del codigo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6-beta
 
       - name: 2.Instalar dependencias
         run: |

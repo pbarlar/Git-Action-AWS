@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 1.Checkout del código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6-beta
 
       - name: 2. Copiar archivos a isntancia
         uses: appleboy/scp-action@v0.1.7

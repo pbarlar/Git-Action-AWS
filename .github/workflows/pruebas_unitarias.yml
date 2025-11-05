@@ -14,7 +14,7 @@ jobs:
 
     steps: 
       - name: 1. Checkout del código
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6-beta
 
       - name: 2. Instalar dependencias
         run: npm install

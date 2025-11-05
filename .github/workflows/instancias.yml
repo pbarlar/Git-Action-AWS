@@ -31,6 +31,6 @@ jobs:
           script: |
             sudo mkdir -p /var/www/my-site
             sudo cp -r /home/${{ secrets.EC2_USER }}/site/* /var/www/my-site/
-            # permisos: prueba para Ubuntu/Nginx y AmazonLinux/Nginx
+            # permisos: prueba para Ubuntu/Nginx
             sudo chown -R www-data:www-data /var/www/my-site 2>/dev/null | true
             sudo systemctl restart nginx || true

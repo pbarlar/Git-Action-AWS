@@ -1,0 +1,94 @@
+name: Pipeline CI/CD Completo (Test -> Doc y Deploy)
+
+# 1. DISPARADORES (Events)
+# He unificado todo para que salte en 'dev' y botón manual.
+on:
+  workflow_dispatch:
+  #push:
+    #branches:
+      #- dev
+  #pull_request:
+    #branches:
+      #- dev
+
+jobs:
+  # ---------------------------------------------------
+  # JOB 1: PRUEBAS UNITARIAS (El Guardián)
+  # ---------------------------------------------------
+  comprobar_pruebas_unitarias:
+    name: 1. Ejecutar Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4  # He actualizado a v4 (v6-beta no es estándar aún)
+
+      - name: Instalar dependencias
+        run: npm install
+
+      # Tip: A veces no hace falta el chmod si jest se invoca con npx, pero lo dejo como pediste.
+      - name: Arreglar permisos del binario Jest
+        run: chmod +x ./node_modules/.bin/jest
+
+      - name: Ejecutar pruebas unitarias
+        run: npm test
+
+  # ---------------------------------------------------
+  # JOB 2: DOCUMENTACIÓN (Depende de Tests)
+  # ---------------------------------------------------
+  documentacion_automatica:
+    name: 2. Generar Docs
+    runs-on: ubuntu-latest
+    needs: comprobar_pruebas_unitarias  # <--- AQUÍ ESTÁ LA CLAVE
+    
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias
+        run: |
+          npm install
+          npm install jsdoc
+
+      - name: Generar documentacion
+        run: |
+          echo "Generando documentación con JSDoc..."
+          mkdir -p docs
+          npx jsdoc -d docs .
+
+  # ---------------------------------------------------
+  # JOB 3: DESPLIEGUE S3 (Depende de Tests)
+  # ---------------------------------------------------
+  despliegue_bucket:
+    name: 3. Subir a AWS S3
+    runs-on: ubuntu-latest
+    needs: documentacion_automatica  
+    
+    # Opcional: Añadir un 'if' para que NO despliegue en Pull Requests, solo en Push
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias (Limpio)
+        run: npm ci
+
+      - name: Configurar credenciales de AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+
+      - name: Subir al bucket
+        run: |
+          echo "Subiendo archivos a S3..."
+          # Tip de examen: --delete borra en S3 lo que ya no exista en tu código
+          aws s3 sync ./ s3://${{ secrets.S3_BUCKET }}/ --delete
